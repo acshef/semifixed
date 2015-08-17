@@ -1,3 +1,4 @@
+// 1.0.0
 (function($) {
   $.fn.semifixed = function() {
     var elem = $(this)[0];
