@@ -6,7 +6,7 @@
     var delta = 0;
     var offset = document.documentElement.scrollTop;
     var height = elem.height()+2; // Re-initialize to recalculate the height
-    $(window).off("scroll.fix").on("scroll.semifixed",function(e){ // Can be re-initialized because namespaced event(s) are removed
+    $(window).off("scroll.semifixed").on("scroll.semifixed",function(e){ // Can be re-initialized because namespaced event(s) are removed
       delta = (window.scrollY||document.documentElement.scrollTop) - offset;
       offset = window.scrollY||document.documentElement.scrollTop;
       if (delta>0 && visible) {
