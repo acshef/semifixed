@@ -1,23 +1,25 @@
-// 1.0.0
+// 1.1.0
 (function($) {
   $.fn.semifixed = function() {
-    var elem = $(this)[0];
-        elem.style.position = "fixed";
+    var elem = $(this).first().css("position","fixed");
+    var visible = true;
     var delta = 0;
     var offset = document.documentElement.scrollTop;
-    $(window).on("scroll",function(){
+    var height = elem.height()+2; // Re-initialize to recalculate the height
+    $(window).off("scroll.fix").on("scroll.semifixed",function(e){ // Can be re-initialized because namespaced event(s) are removed
       delta = (window.scrollY||document.documentElement.scrollTop) - offset;
       offset = window.scrollY||document.documentElement.scrollTop;
-      var top = elem.offsetTop;
-      if (delta > 0) { // Scrolling DOWNWARD
-        if (top > -(elem.offsetHeight+1)) {
-          elem.style.top = Math.max(top-delta,-(elem.offsetHeight+1))+"px";
-        }
-      } else if (top <= 0) { // SCROLLING UPWARD
-        elem.style.top = Math.min(top-delta,0)+"px";
-      } // ELSE there's a scroll event, but no change in document position
+      if (delta>0 && visible) {
+        $('.dropdown.open .dropdown-toggle',elem).dropdown("toggle"); // Hide any open dropdowns
+        elem.find(document.activeElement).blur(); // Blur an element (in the navbar) if it has focus
+        elem.stop(true).animate({top:-height},"fast"); // Move the navbar off-screen
+        visible=false;
+      } else if (delta<0 && !visible){
+        elem.stop(true).animate({top:0},"fast"); // Put navbar back on-screen
+        visible=true;
+      }
     });
-    return $(elem);
+    return elem; // Return jQuery object (single element)
   };
   $(".navbar-fixed-top").semifixed(); // It's self-aware!
 }(jQuery));
